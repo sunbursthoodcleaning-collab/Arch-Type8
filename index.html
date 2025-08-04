@@ -784,14 +784,25 @@
 
     <script>
         function orderNow(tier, price, storyCount) {
-            // Track the selection
-            console.log(`Selected: ${tier} tier - $${price} for ${storyCount} stories`);
+            // Real Stripe checkout URLs
+            const stripeUrls = {
+                starter: 'https://buy.stripe.com/9B64gygN69vL0vs9k91kA01',
+                professional: 'https://buy.stripe.com/3cI8wOdAU9vL0vsaod1kA02', 
+                agency: 'https://buy.stripe.com/aFa7sKbsM0ZfceaeEt1kA03'
+            };
             
-            // In production, redirect to Stripe checkout
-            alert(`Redirecting to secure checkout for ${tier} tier ($${price} for ${storyCount} stories).\n\nYou'll provide your product/service details after payment.`);
+            // Track the selection (for analytics)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'tier_selected', {
+                    'tier': tier,
+                    'price': price,
+                    'story_count': storyCount,
+                    'event_category': 'conversion'
+                });
+            }
             
-            // Production redirect:
-            // window.location.href = `https://buy.stripe.com/${tier}-checkout-link`;
+            // Redirect to Stripe checkout
+            window.location.href = stripeUrls[tier];
         }
 
         // Smooth animations on scroll
